@@ -1,0 +1,57 @@
+Goal/Desired Results:
+	1.	Stores grades in a text file
+	2.	Top of text file contains the username and password required to access
+	3.	If the file requested does not exist, it creates a new file
+	4.	Stores each type of grade as an object
+		a.	Object contains the name of the type of grade, the weight of the grade, and a list of all the grades it contains
+	5.	Each object is separated by a -1 in the text file
+	6.	The program should provide the following options:
+		a.	Predictions for lowest possible grade
+		b.	Predictions for highest possible grade
+		c.	Predictions for most likely grade
+		d.	(Possibly) Predictions for default grade (using the configurable default grade)
+		e.	Grade required on a type of grade for A/B/C/D
+		f.	Drop lowest x grade(s)
+		g.	Curve requirements for the next letter grade up
+		h.	Warning if the weight sum doesn’t add up to 100
+Pseudocode:
+	1.	Ask for a filename.
+		i.	The name structure will be “Class-[student initials].txt”.
+	2.	If it can’t find the file, the program will prompt the user to create a new file.
+		i.	If the user says “no” then it will give the option to exit, or loop and ask for another filename.
+	3.	Once a file is opened, it will read in the whole thing and have the data loaded.
+		i.	Because the whole text file will be written by the user, there should be no exceptions in the text file unless the user manually modified the text file. This means I won't add exception handling in the initial program for reading from the text file (although I may add it later).
+	4.	The program will obtain a username and password from user input and compare them to lines 1 and 2 (respectively) of the given text file.
+		i.	If either string is incorrect then it loops or gives the user an option to exit.
+		ii.	If the user is creating a new file then it will set the first given username/password as the file credentials, but it will also ask the user to confirm by typing it a second time. 
+	5.	After the correct credentials are entered, the file will populate a list of type “Grade” with the data from the following lines of the text file.
+		i.	Each “Grade” object will contain 3-5 variables.
+			a.	A string for the name of the grade type.
+			b.	A float for the overall weight of the grade.
+			c.	A list containing all the given grades in this type.
+			d.	(Possibly) an int containing the expected number of grades that haven't been submitted. (So the program can predict highest and lowest possible)
+			e.	(Possibly) a boolean to determine whether a grade object has recieved all needed values.
+		ii.	The text file will be read in line by line.
+		iii.	Every Grade object in a text file will be read in in the order of the object variables listed above.
+		iv.	After each object is read and a "-1" is found (the list can be empty but it will continue to populate until the "-1" is found) the variables will be compiled into a new grade object and the loop will continue until the whole file is read.
+	6.	Now the file is completely read in. Next, loop through each grade object and ask the user if they want to add any entries.
+		i.	The user will be able to add floats to the list variable until they choose to stop.
+	7.	Once the user has been prompted for entries for all existing grade objects, they will have the opportunity to add new grade types.
+		i.	For each new entry, the user must add a name, a float for a weight, (and optionally an int to specify the expected amount of grades in that category)
+		ii.	An exeption should be added to ensure that the new name isn't equal to any existing name
+		iii.	An exeption should be added to ensure that the weight isn't greater than 1, and returns a warning if the new sum of weights is less than or greater than 1.
+		iv.	An exception should be added in case the user enters anything other than a float, so the program can continue and ask the user to try again until they enter a valid float.
+		v.	The list of entries can be empty, but the assumption for that list will be that the list averages to 100 when it comes to performing calculations (Possibly: add a configurable default average to consider)
+	8.	Now all the Data is loaded and up to date. Next, export the updated data back into the existing text file so that everything is up to date.
+	9.	Finally, perform all the calculations:
+		i.	Collect the amount of lowest grades to drop for each type of grade.
+		ii.	Address rules for final application (e.g. calculus final - choosing between the final and the average of all exams for exam grade).
+		iii.	Collect the float for the default value for unfilled spots.
+		iv.	Decide how to handle scenarios where the sum of all weights is less than or greater than 1.
+		v.	Calculate the lowest possible grade by filling any unfilled entry spots with 0s and calculate the resulting average.
+		vi.	Calculate the highest possible grade by filling any unfilled entry spots with 100s and calculate the resulting average.
+		vii.	Calculate the predicted grade by filling any unfilled entry spots with the average of all existing entries in the given list and calculate the resulting average.
+		viii.	Calculate the default grade by filling any unfilled entry spots with a preset configurable number and calculate the resulting average.
+		ix.	Calculate the minimum grade required on the final to achieve each grade.
+		x.	Calculate the difference between the calculated grades and each letter grade.
+	10.	Print all calculations to the console.

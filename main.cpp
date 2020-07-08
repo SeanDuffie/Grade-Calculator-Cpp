@@ -23,7 +23,7 @@ void error(string message, bool test) {
 }
 
 // Function Parameters - Funtion to load in data from a text file and populate parameters
-string loadData(string username, string password, vector<Grade> Syllabus) {
+string loadData(string& username, string& password, vector<Grade>& Syllabus) {
 	cout << "Loading Syllabus... " << endl;
 	bool loop1 = true; // Loop to allow user to try again when the file they enter is not found
 	string filename; // Name of the file to be read from - or created if not found - and eventually outputted to
@@ -89,25 +89,29 @@ string loadData(string username, string password, vector<Grade> Syllabus) {
 					}
 				} while (loop2);
 
-				string name, w, e; // Variable of the new Grade Object
+				string name, w, f, e; // Variable of the new Grade Object
 				// Loop to cycle through each new Grade Object found in the text file
-				while (ss >> name >> w >> e) {
-					error("Other invalid input", (name == "" || w == "" || e == ""));
+				while (ss >> name >> w >> f >> e) {
+					error("Other invalid input", (name == "" || f == "" || w == "" || e == ""));
 					cout << "Pushing Back new grade..." << endl;
-					Syllabus.push_back(Grade(name, stof(w)));
-					cout << "Inserted new grade: " << Syllabus.back().name << " of weight " << Syllabus.back().wt << endl;
+					Syllabus.push_back(Grade(name, stof(w), stoi(f)));
+					cout << "Inserted new grade: " << Syllabus.back().name << " of weight " << Syllabus.back().wt << ". This type is finished: " << Syllabus.back().fin << endl;
 					while (e != "-1") {
 						Syllabus.back().insertEntry(stof(e));
 						ss >> e;
 					}
 				}
+				ss.clear(); // Empty the stringstream
 			}
+			inFile.close(); // Close the input file
 		}
 	}
 	return filename;
 }
 
-void modifyData(vector<Grade> Syllabus) {
+// Function Parameters - Function to allow the user to modify the existing data or to add new data
+void modifyData(string& username, string& password, string& filename, vector<Grade>& Syllabus) {
+	// Prompt to change username or password
 	// Prompt to add a new Grade Object to the Syllabus
 
 	// Loop through each Grade Object in the Syllabus
@@ -130,8 +134,34 @@ void modifyData(vector<Grade> Syllabus) {
 	}*/
 }
 
+// Function Parameters - Function to output the loaded, processed, and possibly modified data back into the original file
 void saveData(string username, string password, string filename, vector<Grade> Syllabus) {
+	cout << "Saving Syllabus..." << endl;
+	// Open the file or create a new file with the given filename
+	ofstream outFile(filename); // Output file - generated from the filename text file.
+	if (!outFile.is_open()) error("Unable to open file", true);
+	else {
+		cout << "Populating Header..." << endl;
+		cout << "  Adding username = '" << username << "' and password = '" << password << "'." << endl;
+		outFile << username << "\n"
+				<< password << "\n"; // Output the data in the header information (username, password, fin)
+		// Output the data for each Grade Object
+		for (Grade g : Syllabus) {
+			cout << "  Adding Grade: " << g;
+			outFile << g;
+		}
+	}
+	outFile.close(); // Close the output file
+}
 
+// Function Parameters - Function to perform all the calculations on the current Syllabus
+void performCalculations() {
+	// Loop to allow user to repeat this function
+		// Loop through each Grade and prompts user for the amount of expected future entries
+		// Calculate the average of all entries for each Grade Object and store it in a separate vector (of the same size of the Syllabus)
+			// Repeat this process with a new vector for the several different configurations:
+		// For each vector of average entries, find the sum of each average multiplied by it's respective weight
+		// Each of the sums are different grade results, print all to console with descriptions
 }
 
 int main() {
@@ -142,9 +172,11 @@ int main() {
 	string filename = loadData(username, password, Syllabus); // Name of the file to be read from - or created if not found - and eventually outputted to
 	for (Grade g : Syllabus) { cout << g << endl; }
 
-	modifyData(Syllabus);
+	modifyData(username, password, filename, Syllabus);
 
 	saveData(username, password, filename, Syllabus);
+
+	performCalculations();
 
 	system("pause");
 	return 0;

@@ -24,9 +24,11 @@ struct Grade {
 	vector<float> v; // Vector of entries sorted in ascending order
 	int amnt; // Expected amount of entries that have not been entered (optional)
 	bool fin; // Set to true when user says there are no more elements to add
+	//void setWeight(float w); // Function to modify the existing value for the weight
+	//void setAmnt(int a); // Function to modify the expected amount of additional entries
 	void insertEntry(float entry); // insertEntry(float entry) - inserts a float in the sorted vector - Runtime O(n)
 	bool removeEntry(int index); // removeEntry(int index) - removes the element in the vector at a given point - Runtime O(n)
-	Grade(string n = " ", float w = 0.1, int a = 0, bool f = false) : name(n), wt(w), v(), amnt(a), fin(f) {}; // Default Constructor
+	Grade(string n = " ", float w = 0.1, bool f = false) : name(n), wt(w), v(), amnt(0), fin(f) {}; // Default Constructor
 };
 
 // insertEntry(float entry) - inserts a float in the sorted vector - Runtime O(n)
@@ -66,7 +68,8 @@ bool Grade::removeEntry(int index) {
 ostream& operator<<(ostream& out, Grade& g) {
 	out << g.name << "\n";
 	out << g.wt << "\n";
-	for (float temp : g.v) { out << temp << "\n"; }
+	out << g.fin << "\n";
+	for (float e : g.v) { out << e << "\n"; }
 	out << -1 << "\n";
 	return out;
 }

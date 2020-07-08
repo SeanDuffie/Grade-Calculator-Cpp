@@ -21,11 +21,11 @@ struct Grade {
 	string name; // Name of Grade type
 	float wt; // Overall weight of the type of grade
 	vector<float> v; // Vector of entries sorted in ascending order
-	//int amnt; // Expected amount of entries that have not been entered (optional)
-	//bool fin; // Set to true when user says there are no more elements to add
+	int amnt; // Expected amount of entries that have not been entered (optional)
+	bool fin; // Set to true when user says there are no more elements to add
 	void insertEntry(float entry); // insertEntry(float entry) - inserts a float in the sorted vector - Runtime O(n)
 	bool removeEntry(int index); // removeEntry(int index) - removes the element in the vector at a given point - Runtime O(n)
-	Grade(string n = " ", float w = 0.1) : name(n), wt(w), v() {};
+	Grade(string n = " ", float w = 0.1, int a = 0, bool f = false) : name(n), wt(w), v(), amnt(a), fin(f) {};
 };
 
 // insertEntry(float entry) - inserts a float in the sorted vector - Runtime O(n)
@@ -54,9 +54,7 @@ bool Grade::removeEntry(int index) {
 		cout << "Vector before removing:" << endl;
 		for (int i = 0; i < v.size(); i++) cout << v[i] << endl;
 		cout << "Removing the element at index " << index << ": (" << v[index] << ")" << endl;
-		vector<float>::iterator it = v.begin();
-		//advance(it,index);
-		v.erase(it + index);
+		v.erase(v.begin() + index);
 		cout << "Vector after removing:" << endl;
 		for (float temp : v) cout << temp << endl;
 		return true;

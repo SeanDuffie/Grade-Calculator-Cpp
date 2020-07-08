@@ -15,38 +15,42 @@
 
 using namespace std;
 
+// Templated Error Message Function
 void error(string message, bool test) {
 	if (test) {
 		cout << "Error: " << message << endl;
 	}
 }
 
+// Function Parameters - Funtion to load in data from a text file and populate parameters
 string loadData(string username, string password, vector<Grade> Syllabus) {
 	cout << "Loading Syllabus... " << endl;
-	bool loop1 = true;
-	string filename;
+	bool loop1 = true; // Loop to allow user to try again when the file they enter is not found
+	string filename; // Name of the file to be read from - or created if not found - and eventually outputted to
+
 	while (loop1) {
-		string classname, initials;
+		string classname, initials; // Variable used for the filename
 		cout << "Enter the name for your class: " << endl;
 		getline(cin, classname);
 		cout << "Enter your initials: " << endl;
 		getline(cin, initials);
 		filename = classname + "-" + initials + ".txt";
 		//filename = "CSCE222-SD.txt";
-		ifstream inFile(filename);
+		ifstream inFile(filename); // Input file - format is structured like "[Class]-[user initials].txt".
+
 		if (!inFile) {
-			string check;
+			string check; // Option to create a new file, try again, or quit the program
 			cout << "No existing file for this combination of Class Name and initials was found." << endl;
 			cout << "Would you like to create a new file? (y - lowercase only - for yes, anything else for no): " << endl;
 			getline(cin, check);
-			if (check == "y") {
+			if (check == "y") { // Try again
 				cout << "Enter the username for the new file: " << endl;
 				getline(cin, username);
 				cout << "Enter the password for the new file: " << endl;
 				getline(cin, password);
 				return filename;
 			}
-			else {
+			else { // Prompt to quit
 				cout << "Would you like to quit the program? (y - lowercase only - for yes, anything else for no): " << endl;
 				getline(cin, check);
 				if (check == "y") exit(1);
@@ -54,16 +58,16 @@ string loadData(string username, string password, vector<Grade> Syllabus) {
 		}
 		else {
 			loop1 = false;
-			string un, pw;
+			string un, pw; // Correct Credentials Acquired from the file
+			// Loop to cycle through the data in the file
 			while (!inFile.eof()) {
 				string un, pw, line;
 				getline(inFile, un);
 				getline(inFile, pw);
 				getline(inFile, line, '\r');
-				cout << "Line: " << line << endl;
-				istringstream ss(line);
+				istringstream ss(line); // Breaks the data from the text file into components
 
-				bool loop2 = true;
+				bool loop2 = true; // Acquires Credentials from the user and verifies them
 				do {
 					cout << "Enter your username" << endl;
 					getline(cin, username);
@@ -71,28 +75,28 @@ string loadData(string username, string password, vector<Grade> Syllabus) {
 					getline(cin, password);
 					//username = "username";
 					//password = "password";
+					// Successful Validation
 					if (username.compare(un) == 0 && password.compare(pw) == 0) {
 						cout << "Valid Credentials Entered. The Program will continue to load." << endl;
 						loop2 = false;
 					}
+					// Incorrect username or password, gives option to try again or quit
 					else {
-						string check;
-						/*cout << "Guess: U = " << username << ", P = " << password << endl;
-						cout << "Actual: U = " << un << ", P = " << pw << endl;*/
+						string check; // Option to quit or retry
 						cout << "Invalid Credentials Entered. Would you like to try again? (y - lowercase only - for yes, anything else for no): " << endl;
 						getline(cin, check);
 						if (check != "y") exit(1);
 					}
 				} while (loop2);
 
-				string name, w, e;
+				string name, w, e; // Variable of the new Grade Object
+				// Loop to cycle through each new Grade Object found in the text file
 				while (ss >> name >> w >> e) {
 					error("Other invalid input", (name == "" || w == "" || e == ""));
 					cout << "Pushing Back new grade..." << endl;
 					Syllabus.push_back(Grade(name, stof(w)));
-					cout << "Inserted new grade: " << Syllabus.back();
+					cout << "Inserted new grade: " << Syllabus.back().name << " of weight " << Syllabus.back().wt << endl;
 					while (e != "-1") {
-						cout << "Inserting key " << e << "... " << endl;
 						Syllabus.back().insertEntry(stof(e));
 						ss >> e;
 					}
@@ -103,40 +107,42 @@ string loadData(string username, string password, vector<Grade> Syllabus) {
 	return filename;
 }
 
+void modifyData(vector<Grade> Syllabus) {
+	// Prompt to add a new Grade Object to the Syllabus
+
+	// Loop through each Grade Object in the Syllabus
+	/*for (Grade g : Syllabus) {
+		// Add any new entries to the grade
+		bool loop1 = true;
+		while (loop1) {
+			string check;
+			cout << "Do you want to add a new entry to the " << g.name << " category? (y - lowercase only - for yes, anything else for no): " << endl;
+			getline(cin, check);
+			if (check == "y") {
+				string entry;
+				cout << "Enter the grade that you want to insert into the " << g.name << " category: " << endl;
+				getline()
+			}
+			else
+		}
+		// Print all current entries in the grade, with an index included
+		// Prompt the user to pick an entry to remove
+	}*/
+}
+
 void saveData(string username, string password, string filename, vector<Grade> Syllabus) {
 
 }
 
 int main() {
-	/*Grade Final("Final", 0.2);
-	cout << "Initial Grade Object: " << endl << Final << endl;
-	Final.insertEntry(100);
-	Final.insertEntry(99);
-	Final.insertEntry(95.5);
-	Final.insertEntry(0);
-	Final.insertEntry(100);
-	Final.insertEntry(98);
-	Final.insertEntry(96);
-	Final.insertEntry(97);
-	Final.insertEntry(97);
-	Final.insertEntry(0);
-	cout << "Grade Object After 10 Insertions: " << endl << Final << endl;
-	Final.removeEntry(-1);
-	Final.removeEntry(10);
-	Final.removeEntry(9);
-	Final.removeEntry(0);
-	Final.removeEntry(4);*/
 
-	vector<Grade> Syllabus;
-	string username = "";
-	string password = "";
+	vector<Grade> Syllabus; // Vector used to store all the elements of a Grade Object
+	string username, password; // Credentials Acquired from the user. Validated to be true after passed through "loadData()".
 
-	string filename = loadData(username, password, Syllabus);
-	for (Grade g : Syllabus) {
-		cout << g << endl;
-	}
+	string filename = loadData(username, password, Syllabus); // Name of the file to be read from - or created if not found - and eventually outputted to
+	for (Grade g : Syllabus) { cout << g << endl; }
 
-	modifyData();
+	modifyData(Syllabus);
 
 	saveData(username, password, filename, Syllabus);
 

@@ -17,6 +17,7 @@
 
 using namespace std;
 
+//
 struct Grade {
 	string name; // Name of Grade type
 	float wt; // Overall weight of the type of grade
@@ -25,7 +26,7 @@ struct Grade {
 	bool fin; // Set to true when user says there are no more elements to add
 	void insertEntry(float entry); // insertEntry(float entry) - inserts a float in the sorted vector - Runtime O(n)
 	bool removeEntry(int index); // removeEntry(int index) - removes the element in the vector at a given point - Runtime O(n)
-	Grade(string n = " ", float w = 0.1, int a = 0, bool f = false) : name(n), wt(w), v(), amnt(a), fin(f) {};
+	Grade(string n = " ", float w = 0.1, int a = 0, bool f = false) : name(n), wt(w), v(), amnt(a), fin(f) {}; // Default Constructor
 };
 
 // insertEntry(float entry) - inserts a float in the sorted vector - Runtime O(n)

@@ -112,26 +112,95 @@ string loadData(string& username, string& password, vector<Grade>& Syllabus) {
 // Function Parameters - Function to allow the user to modify the existing data or to add new data
 void modifyData(string& username, string& password, string& filename, vector<Grade>& Syllabus) {
 	// Prompt to change username or password
+	string check; // String to test user input
+	cout << "Would you like to change your username? (y - lowercase only - for yes, anything else for no): " << endl;
+	getline(cin, check);
+	if (check == "y") {
+		cout << "Enter your new username: " << endl;
+		getline(cin, username);
+	}
+	cout << "Would you like to change your password? (y - lowercase only - for yes, anything else for no): " << endl;
+	getline(cin, check);
+	if (check == "y") {
+		cout << "Enter your new password: " << endl;
+		getline(cin, password);
+	}
+
 	// Prompt to add a new Grade Object to the Syllabus
+	bool loop1 = true;
+	while (loop1) {
+		cout << "Would you like to add a new type of Grade? (y - lowercase only - for yes, anything else for no): " << endl;
+		getline(cin, check);
+		if (check != "y") loop1 = false;
+		else {
+			string name, wt, fin, entry;
+			cout << "Enter the name of the new Grade Object: " << endl;
+			getline(cin, name);
+			cout << "Enter the weight of this Grade Object: " << endl;
+			getline(cin, wt);
+			Syllabus.push_back(Grade(name, stof(wt)));
+			do {
+				cout << "Enter a float for an entry: " << endl;
+				getline(cin, entry);
+				if (entry != "-1") Syllabus.back().insertEntry(stof(entry));
+			} while (entry != "-1");
+			cout << "Is this list finished? (y - lowercase only - for yes, anything else for no): " << endl;
+			getline(cin, check);
+			if (check == "y") Syllabus.back().fin = true;
+		}
+	}
 
 	// Loop through each Grade Object in the Syllabus
-	/*for (Grade g : Syllabus) {
-		// Add any new entries to the grade
+	for (Grade g : Syllabus) {
 		bool loop1 = true;
 		while (loop1) {
+			// Print all current entries in the grade, with an index included
+			cout << "Current Grade Type: " << endl;
+			cout << "Name - " << g.name << endl
+				 << "Weight - " << g.wt << endl
+				 << "Finished - " << g.fin << endl
+				 << "Entries: " << endl;
+			for (int i = 1; i <= g.v.size(); i++) { cout << i << ". " << g.v[i - 1] << endl; }
+
 			string check;
+
+			// Add any new entries to the grade
 			cout << "Do you want to add a new entry to the " << g.name << " category? (y - lowercase only - for yes, anything else for no): " << endl;
 			getline(cin, check);
 			if (check == "y") {
 				string entry;
 				cout << "Enter the grade that you want to insert into the " << g.name << " category: " << endl;
-				getline()
+				getline(cin, entry);
+				g.insertEntry(stof(entry));
 			}
-			else
+
+			// Print all current entries in the grade, with an index included
+			cout << "Current Grade Type: " << endl;
+			cout << "Name - " << g.name << endl
+				 << "Weight - " << g.wt << endl
+				 << "Finished - " << g.fin << endl
+				 << "Entries: " << endl;
+			for (int i = 1; i <= g.v.size(); i++)
+			{
+				cout << i << ". " << g.v[i - 1] << endl;
+			}
+
+			// Remove existing entries from the grade
+			cout << "Do you want to remove an entry from the " << g.name << " category? (y - lowercase only - for yes, anything else for no): " << endl;
+			getline(cin, check);
+			if (check == "y") {
+				string index;
+				cout << "Enter the index of the grade you want to remove: " << endl;
+				getline(cin, index);
+				g.removeEntry(stoi(index)-1);
+			}
+
+			// Prompt to end loop
+			cout << "Do you want to end this loop? (y - lowercase only - for yes, anything else for no): " << endl;
+			getline(cin, check);
+			if (check == "y") loop1 = false;
 		}
-		// Print all current entries in the grade, with an index included
-		// Prompt the user to pick an entry to remove
-	}*/
+	}
 }
 
 // Function Parameters - Function to output the loaded, processed, and possibly modified data back into the original file
